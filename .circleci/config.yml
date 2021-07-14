@@ -25,5 +25,6 @@ jobs:
                               fi
                               echo ${S3_BUCKET_PATH}
                   - aws-s3/copy:
-                          from: '*.html'
+                          arguments:  --recursive --exclude ".git/*"
+                          from: '.'
                           to: 's3://${AWS_BUCKET}/${S3_BUCKET_PATH}/'

@@ -14,11 +14,11 @@ jobs:
                           command: |
                               echo ${CIRCLE_BRANCH}
                               if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-                                    echo 'Uploading featured content from develop branch to staging folder on bucket'
+                                    echo 'Uploading featured content from develop branch to develop folder on bucket'
                                     echo 'export S3_BUCKET_PATH="develop"' >> $BASH_ENV
                               elif [ "${CIRCLE_BRANCH}" == "master" ]; then
-                                    echo 'Uploading featured content from master branch to production folder on bucket'
-                                    echo 'export S3_BUCKET_PATH="production"' >> $BASH_ENV
+                                    echo 'Uploading featured content from master branch to master folder on bucket'
+                                    echo 'export S3_BUCKET_PATH="master"' >> $BASH_ENV
                               else
                                     echo 'Uploading featured content from testing branch'
                                     echo 'export S3_BUCKET_PATH="test/$(echo ${CIRCLE_BRANCH})"' >> $BASH_ENV

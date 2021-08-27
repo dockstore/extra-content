@@ -29,8 +29,8 @@ jobs:
                           arguments:  --recursive --exclude ".git/*"
                           from: '.'
                           to: 's3://${AWS_BUCKET}/${S3_BUCKET_PATH}/'
-      aws-cli-invalidate:
-            executor: aws-cli/default
-            steps:
-              - aws-cli/setup
-              - run: aws cloudfront create-invalidation  --distribution-id E3CNVA9MF9UJJ
+                  - aws-cli-invalidate:
+                    executor: aws-cli/default
+                    steps:
+                      - aws-cli/setup
+                      - run: aws cloudfront create-invalidation  --distribution-id E3CNVA9MF9UJJ

@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
       aws-s3: circleci/aws-s3@1.0.0 #imports the s3 orb in the circleci namespace
+      aws-cli: circleci/aws-cli@2.0.3 # invalidate cloudfront so featured content is up-to-date
 
 jobs:
       build:
@@ -28,3 +29,5 @@ jobs:
                           arguments:  --recursive --exclude ".git/*"
                           from: '.'
                           to: 's3://${AWS_BUCKET}/${S3_BUCKET_PATH}/'
+                  - aws-cli/setup
+                  - run: aws cloudfront create-invalidation  --distribution-id E3CNVA9MF9UJJ --paths "/*"

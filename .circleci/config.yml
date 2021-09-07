@@ -34,8 +34,8 @@ jobs:
 
 workflows:
       everything:
-          jobs:
-                - build:
-                    context:
-                        - aws-featured-content
+            jobs:
+                  - build:
+                          context:
+                                - aws-featured-content
 

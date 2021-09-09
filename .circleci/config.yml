@@ -1,33 +1,40 @@
 version: 2.1
 
 orbs:
-      aws-s3: circleci/aws-s3@1.0.0 #imports the s3 orb in the circleci namespace
-      aws-cli: circleci/aws-cli@2.0.3 # invalidate cloudfront so featured content is up-to-date
+  aws-s3: circleci/aws-s3@1.0.0 #imports the s3 orb in the circleci namespace
+  aws-cli: circleci/aws-cli@2.0.3 # invalidate cloudfront so featured content is up-to-date
 
 jobs:
-      build:
-            docker:
-                  - image: 'circleci/python:2.7'
-            steps:
-                  - checkout
-                  - run:
-                          name: Check branch to set s3 bucket path
-                          command: |
-                              echo ${CIRCLE_BRANCH}
-                              if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-                                    echo 'Uploading featured content from develop branch to develop folder on bucket'
-                                    echo 'export S3_BUCKET_PATH="develop"' >> $BASH_ENV
-                              elif [ "${CIRCLE_BRANCH}" == "master" ]; then
-                                    echo 'Uploading featured content from master branch to master folder on bucket'
-                                    echo 'export S3_BUCKET_PATH="master"' >> $BASH_ENV
-                              else
-                                    echo 'Uploading featured content from testing branch'
-                                    echo 'export S3_BUCKET_PATH="test/$(echo ${CIRCLE_BRANCH})"' >> $BASH_ENV
-                              fi
-                              echo ${S3_BUCKET_PATH}
-                  - aws-s3/copy:
-                          arguments:  --recursive --exclude ".git/*"
-                          from: '.'
-                          to: 's3://${AWS_BUCKET}/${S3_BUCKET_PATH}/'
-                  - aws-cli/setup
-                  - run: aws cloudfront create-invalidation  --distribution-id E3CNVA9MF9UJJ --paths "/*"
+  build:
+    docker:
+      - image: 'circleci/python:2.7'
+    steps:
+      - checkout
+      - run:
+          name: Check branch to set s3 bucket path
+          command: |
+            echo ${CIRCLE_BRANCH}
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+                  echo 'Uploading featured content from develop branch to develop folder on bucket'
+                  echo 'export S3_BUCKET_PATH="develop"' >> $BASH_ENV
+            elif [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  echo 'Uploading featured content from master branch to master folder on bucket'
+                  echo 'export S3_BUCKET_PATH="master"' >> $BASH_ENV
+            else
+                  echo 'Uploading featured content from testing branch'
+                  echo 'export S3_BUCKET_PATH="test/$(echo ${CIRCLE_BRANCH})"' >> $BASH_ENV
+            fi
+            echo ${S3_BUCKET_PATH}
+      - aws-s3/copy:
+          arguments: --recursive --exclude ".git/*"
+          from: '.'
+          to: 's3://${AWS_BUCKET}/${S3_BUCKET_PATH}/'
+      - aws-cli/setup
+      - run: aws cloudfront create-invalidation  --distribution-id E3CNVA9MF9UJJ --paths "/*"
+
+workflows:
+  everything:
+    jobs:
+      - build:
+          context:
+            - aws-featured-content

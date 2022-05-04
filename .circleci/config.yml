@@ -8,6 +8,7 @@ jobs:
   build:
     docker:
       - image: 'cimg/python:2.7'
+    executor: aws-cli/default  
     steps:
       - aws-cli/setup:
           profile-name: WEB IDENTITY PROFILE

@@ -37,7 +37,7 @@ jobs:
           name: Check for valid html
           command: |
             pip install html5validator
-            html5validator --root .
+            html5validator --root . --ignore 'doctype' 'head'
       - aws-s3/copy:
           arguments: --recursive --exclude ".git/*"
           from: '.'

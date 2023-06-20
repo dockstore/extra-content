@@ -8,7 +8,6 @@ jobs:
   build:
     docker:
       - image: 'cimg/python:3.8'
-      - image: 'cimg/openjdk:8.0'
     executor: aws-cli/default  
     steps:
       - aws-cli/setup:
@@ -31,6 +30,9 @@ jobs:
                   echo 'export S3_BUCKET_PATH="test/$(echo ${CIRCLE_BRANCH})"' >> $BASH_ENV
             fi
             echo ${S3_BUCKET_PATH}
+      - run:
+          name: Install java
+          command: sudo apt-get update && sudo apt-get install -y openjdk-8-jre
       - run:
           name: Check for valid html
           command: |

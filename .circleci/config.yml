@@ -30,9 +30,10 @@ jobs:
                   echo 'export S3_BUCKET_PATH="test/$(echo ${CIRCLE_BRANCH})"' >> $BASH_ENV
             fi
             echo ${S3_BUCKET_PATH}
+      # Installing java (8 or later) since html5validator requires both python and java
       - run:
           name: Install java
-          command: sudo apt-get update && sudo apt-get install -y openjdk-8-jre
+          command: sudo apt-get update && sudo apt-get install -y openjdk-17-jre
       - run:
           name: Check for valid html
           command: |
